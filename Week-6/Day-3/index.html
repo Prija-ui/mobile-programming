@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact & Details Form</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <!-- Contact Us Form -->
+      <div class="form-card">
+        <h2>Contact Us</h2>
+
+        <form id="contactForm">
+          <label>Name</label>
+          <input type="text" id="name" placeholder="Enter your name" />
+
+          <label>Email</label>
+          <input type="email" id="email" placeholder="Enter your email" />
+
+          <label>Message</label>
+          <textarea
+            id="message"
+            rows="4"
+            placeholder="Enter your message"
+          ></textarea>
+
+          <div class="btn-group">
+            <button type="submit" class="submit-btn">Submit</button>
+            <button type="button" class="update-btn">Update</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Details Form -->
+      <div class="form-card">
+        <h2>User Details</h2>
+
+        <form id="detailsForm">
+          <label>Name</label>
+          <input
+            type="text"
+            id="details-name"
+            placeholder="Enter your name"
+            readonly
+          />
+
+          <label>Email</label>
+          <input
+            type="email"
+            id="details-email"
+            placeholder="Enter your email"
+            readonly
+          />
+
+          <label>Message</label>
+          <textarea
+            id="details-message"
+            rows="4"
+            placeholder="Enter your message"
+            readonly
+          ></textarea>
+          <div class="btn-group">
+            <button type="button" class="edit-btn">Edit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <script type="module" src="./contact.js"></script>
+  </body>
+</html>
