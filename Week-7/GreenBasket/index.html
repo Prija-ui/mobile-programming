@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>GreenBasket</title>
+
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+    <!-- Firebase Import Map (Realtime Database) -->
+    <script type="importmap">
+        {
+            "imports": {
+                "firebase/app": "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js",
+                "firebase/database": "https://www.gstatic.com/firebasejs/12.15.0/firebase-database.js"
+            }
+        }
+    </script>
+
+    <!-- External Stylesheet -->
+    <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+
+    <!-- ============================================================
+    PHONE FRAME
+    ============================================================ -->
+    <div class="phone-frame" id="app">
+
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <span class="time" id="statusTime">9:31</span>
+            <span class="icons">
+                <i class="fas fa-signal"></i>
+                <i class="fas fa-wifi"></i>
+                <i class="fas fa-battery-full"></i>
+            </span>
+        </div>
+
+        <!-- ============================================================
+        SCREEN CONTAINER
+        ============================================================ -->
+        <div class="screen-container" id="screenContainer">
+
+            <!-- ===================== SCREEN 1: HOME ===================== -->
+            <div class="screen active" id="screen-home">
+                <!-- Greeting -->
+                <div class="greeting-row">
+                    <div class="brand">
+                        <i class="fas fa-leaf leaf"></i>
+                        <h1>GreenBasket</h1>
+                    </div>
+                    <div class="avatar">P</div>
+                </div>
+                <div class="greeting-text">
+                    <div class="body1">Namaste, <span class="name">Prija</span> 🥰</div>
+                    <div class="sub">Fresh products from local farms</div>
+                    <div id="firebaseStatus" class="firebase-status connected">✅ RTDB Connected</div>
+                </div>
+
+                <!-- Search -->
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search" id="homeSearch" />
+                </div>
+
+                <!-- Categories -->
+                <div class="section-header">
+                    <h3>Categories</h3>
+                    <button class="view-all" onclick="navigateTo('categories')">View all</button>
+                </div>
+                <div class="category-chips" id="homeCategories">
+                    <button class="chip active" data-cat="all" onclick="filterHomeProducts('all')">
+                        <i class="fas fa-th-large"></i> All
+                    </button>
+                    <button class="chip" data-cat="Vegetables" onclick="filterHomeProducts('Vegetables')">
+                        <i class="fas fa-carrot"></i> Vegetables
+                    </button>
+                    <button class="chip" data-cat="Fruits" onclick="filterHomeProducts('Fruits')">
+                        <i class="fas fa-apple-alt"></i> Fruits
+                    </button>
+                    <button class="chip" data-cat="Grains" onclick="filterHomeProducts('Grains')">
+                        <i class="fas fa-seedling"></i> Grains
+                    </button>
+                </div>
+
+                <!-- Recommended -->
+                <div class="section-header">
+                    <h3>Recommended for you</h3>
+                    <button class="view-all" onclick="navigateTo('categories')">View all</button>
+                </div>
+                <div class="product-grid" id="homeProducts">
+                    <!-- Rendered by JS -->
+                </div>
+            </div>
+
+            <!-- ===================== SCREEN 2: PRODUCT LISTING ===================== -->
+            <div class="screen" id="screen-categories">
+                <div class="back-row">
+                    <button class="back-btn" onclick="navigateTo('home')">
+                        <i class="fas fa-arrow-left"></i> <span>Back</span>
+                    </button>
+                </div>
+                <h2 class="h2" style="margin-bottom:2px;">All Products</h2>
+
+                <!-- Search -->
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search" id="listingSearch" />
+                </div>
+
+                <!-- Filter Tabs -->
+                <div class="filter-tabs" id="listingFilters">
+                    <button class="tab active" data-cat="all" onclick="filterListing('all')">All</button>
+                    <button class="tab" data-cat="Vegetables" onclick="filterListing('Vegetables')">Vegetables</button>
+                    <button class="tab" data-cat="Fruits" onclick="filterListing('Fruits')">Fruits</button>
+                    <button class="tab" data-cat="Grains" onclick="filterListing('Grains')">Grains</button>
+                </div>
+
+                <div class="product-grid" id="listingProducts">
+                    <!-- Rendered by JS -->
+                </div>
+            </div>
+
+            <!-- ===================== SCREEN 3: PRODUCT DETAILS ===================== -->
+            <div class="screen" id="screen-detail">
+                <div class="back-row">
+                    <button class="back-btn" onclick="navigateTo('categories')">
+                        <i class="fas fa-arrow-left"></i> <span>Back</span>
+                    </button>
+                </div>
+                <div id="detailContent">
+                    <!-- Rendered by JS -->
+                </div>
+            </div>
+
+            <!-- ===================== SCREEN 4: ORDERS ===================== -->
+            <div class="screen" id="screen-orders">
+                <h2 class="h2" style="padding:10px 0 4px 0;">Orders</h2>
+
+                <div class="filter-tabs" id="orderFilters">
+                    <button class="tab active" data-status="all" onclick="filterOrders('all')">All</button>
+                    <button class="tab" data-status="Pending" onclick="filterOrders('Pending')">Pending</button>
+                    <button class="tab" data-status="Accepted" onclick="filterOrders('Accepted')">Accepted</button>
+                    <button class="tab" data-status="Completed" onclick="filterOrders('Completed')">Completed</button>
+                </div>
+
+                <div id="orderList">
+                    <!-- Rendered by JS -->
+                </div>
+            </div>
+
+            <!-- ===================== SCREEN 5: SAVED (PRICE REQUESTS) ===================== -->
+            <div class="screen" id="screen-saved">
+                <h2 class="h2" style="padding:10px 0 4px 0;">Price Requests</h2>
+
+                <div class="filter-tabs" id="requestFilters">
+                    <button class="tab active" data-status="all" onclick="filterRequests('all')">All</button>
+                    <button class="tab" data-status="Pending" onclick="filterRequests('Pending')">Pending</button>
+                    <button class="tab" data-status="Accepted" onclick="filterRequests('Accepted')">Accepted</button>
+                    <button class="tab" data-status="Rejected" onclick="filterRequests('Rejected')">Rejected</button>
+                </div>
+
+                <div id="requestList">
+                    <!-- Rendered by JS -->
+                </div>
+            </div>
+
+            <!-- ===================== SCREEN 6: PROFILE ===================== -->
+            <div class="screen" id="screen-profile">
+                <h2 class="h2" style="padding:10px 0 16px 0;">Profile</h2>
+                <div class="profile-card">
+                    <div class="profile-avatar">P</div>
+                    <h3 class="profile-name">Prija Sanjel</h3>
+                    <p class="profile-role">Customer</p>
+                    <p class="profile-email">prija@gmail.com</p>
+                    <hr class="profile-divider" />
+                    <div class="profile-stats">
+                        <div class="stat-item">
+                            <span><i class="fas fa-shopping-bag"></i>Total Orders</span>
+                            <span class="stat-value" id="totalOrders">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span><i class="fas fa-heart"></i>Saved Items</span>
+                            <span class="stat-value">4</span>
+                        </div>
+                        <div class="stat-item">
+                            <span><i class="fas fa-exchange-alt"></i>Price Requests</span>
+                            <span class="stat-value" id="totalRequests">0</span>
+                        </div>
+                    </div>
+                    <button class="btn-primary logout-btn" onclick="showToast('Logged out')">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </div>
+
+        </div><!-- /screen-container -->
+
+        <!-- ============================================================
+        BOTTOM NAVIGATION
+        ============================================================ -->
+        <div class="bottom-nav">
+            <button class="nav-item active" data-screen="home" onclick="navigateTo('home')">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </button>
+            <button class="nav-item" data-screen="categories" onclick="navigateTo('categories')">
+                <i class="fas fa-th-large"></i>
+                <span>Categories</span>
+            </button>
+            <button class="nav-item" data-screen="orders" onclick="navigateTo('orders')">
+                <i class="fas fa-clipboard-list"></i>
+                <span>Orders</span>
+                <span class="badge" id="orderBadge" style="display:none;">0</span>
+            </button>
+            <button class="nav-item" data-screen="saved" onclick="navigateTo('saved')">
+                <i class="fas fa-heart"></i>
+                <span>Saved</span>
+                <span class="badge" id="requestBadge" style="display:none;">0</span>
+            </button>
+            <button class="nav-item" data-screen="profile" onclick="navigateTo('profile')">
+                <i class="fas fa-user"></i>
+                <span>Profile</span>
+            </button>
+        </div>
+
+        <!-- Toast -->
+        <div class="toast" id="toast"></div>
+    </div>
+
+    <!-- External JavaScript -->
+    <script type="module" src="./app.js"></script>
+
+</body>
+</html>
